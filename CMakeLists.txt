@@ -24,6 +24,7 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hxx"
 )
+list(FILTER PROJECT_SOURCES EXCLUDE REGEX "/PythonBindings/")
 
 add_executable(ant_simulation ${PROJECT_SOURCES})
 
@@ -38,6 +39,29 @@ target_link_libraries(ant_simulation PRIVATE
     SFML::Audio
 )
 
+option(BUILD_PYTHON_BINDINGS "Build the nanobind Python module" OFF)
+
+if(BUILD_PYTHON_BINDINGS)
+    find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
+
+    include(FetchContent)
+    FetchContent_Declare(
+        nanobind
+        GIT_REPOSITORY https://github.com/wjakob/nanobind
+        GIT_TAG v2.13.0
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(nanobind)
+
+    nanobind_add_module(ant_simulation_py
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/PythonBindings/Bindings.cpp
+    )
+
+    target_include_directories(ant_simulation_py PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+endif()
+
 set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
 if(APPLE)
@@ -48,14 +72,14 @@ if(APPLE)
         file(RELATIVE_PATH RESOURCE_REL_PATH "${RESOURCES_DIR}" "${RESOURCE_FILE}")
         get_filename_component(RESOURCE_REL_DIR "${RESOURCE_REL_PATH}" DIRECTORY)
         if(RESOURCE_REL_DIR STREQUAL "")
-            set_source_files_properties("${RESOURCE_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+            set_source_files_properties("${RESOURCE_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION "resources")
         else()
-            set_source_files_properties("${RESOURCE_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${RESOURCE_REL_DIR}")
+            set_source_files_properties("${RESOURCE_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION "resources/${RESOURCE_REL_DIR}")
         endif()
     endforeach()
 
     target_sources(ant_simulation PRIVATE ${RESOURCE_FILES})
-else()
+elseif(EXISTS "${RESOURCES_DIR}")
     add_custom_command(TARGET ant_simulation POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 "${RESOURCES_DIR}" "$<TARGET_FILE_DIR:ant_simulation>/resources"

@@ -1,0 +1,8 @@
+{
+  "name": "ant-simulation",
+  "version": "1.0.0",
+  "builtin-baseline": "5e5139e98a515cd85840cc94fa2cd22d580a9bb8",
+  "dependencies": [
+    "sfml"
+  ]
+}

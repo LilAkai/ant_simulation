@@ -1,7 +1,7 @@
 #include <Engine/Core/Application.hpp>
 #include <Engine/Core/Logger.hpp>
 
-#include <Simulation/States/Game.hpp>
+#include <Simulation/States.hpp>
 
 int Application::Run() {
     if (!Init()) {
@@ -38,7 +38,9 @@ bool Application::Init() {
     m_assets.AcquireGroup("Common");
 
     //- StateManager
+    m_states.Push<PauseState>();
     m_states.Push<GameState>();
+    m_states.Push<MenuState>();
 
     if (!m_window.isOpen()) {
         return false;
@@ -49,6 +51,7 @@ bool Application::Init() {
 
 void Application::HandleEvents() {
     while (const auto event = m_window.pollEvent()) {
+        m_states.HandleEvent(*event);
 
         if (event->is<sf::Event::Closed>()) {
             m_window.close();
@@ -67,7 +70,7 @@ void Application::Update(const float dt) {
 }
 
 void Application::Render() {
-    m_window.clear(sf::Color{30u, 30u, 50u, 255u});
+    m_window.clear(sf::Color{30u, 30u, 50u});
 
     m_states.Render(m_window);
 
