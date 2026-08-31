@@ -10,7 +10,7 @@ void GameState::HandleEvent(const sf::Event& event) {
 }
 
 void GameState::Update(const float dt) {
-
+    
 }
 
 void GameState::Render(sf::RenderTarget& target, float) {

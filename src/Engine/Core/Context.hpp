@@ -39,6 +39,7 @@
 #pragma once
 
 #include "AssetCache.hpp"
+#include "Settings.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -57,7 +58,7 @@ struct Context {
     AssetCache*       Assets = nullptr;
 
     // AudioPlayer*   Audio  = nullptr;
-    // Settings*      Config = nullptr;
+    Settings*         Config = nullptr;
     // InputMapper*   Input  = nullptr;
 
     // --- Générateur aléatoire -----------------------------------------------
@@ -88,6 +89,11 @@ struct Context {
     [[nodiscard]] AssetCache& GetAssets() const {
         assert(Assets != nullptr && "Context::Assets n'a pas été renseigné");
         return *Assets;
+    }
+
+    [[nodiscard]] Settings& GetSettings() const {
+        assert(Config != nullptr && "Context::Config n'a pas été renseigné");
+        return *Config;
     }
 
     [[nodiscard]] sf::Vector2u GetWindowSize() const { return GetWindow().getSize(); }

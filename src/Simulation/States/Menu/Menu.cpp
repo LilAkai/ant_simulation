@@ -48,18 +48,15 @@ void MenuState::LayoutButtons() {
 
     const float TotalHeight = Count * ButtonSize.y + (Count - 1.f) * ButtonSpacing;
     const float StartY = (WindowSize.y - TotalHeight) * 0.5f;
-    const float x = WindowSize.x * 0.5f;   // centre horizontal de la fenêtre
+    const float x = WindowSize.x * 0.5f;
 
     for (std::size_t i = 0; i < m_buttons.size(); ++i) {
         const float y = StartY + static_cast<float>(i) * (ButtonSize.y + ButtonSpacing)
-                      + ButtonSize.y * 0.5f;   // centre vertical de CE bouton
+                      + ButtonSize.y * 0.5f;
         m_buttons[i].SetPosition({ x, y });
     }
 }
 
-// Position de la souris en coordonnées du monde. Passer par mapPixelToCoords
-// est indispensable : après un redimensionnement, les pixels de la fenêtre et
-// les coordonnées de la vue ne coïncident plus.
 sf::Vector2f MenuState::GetMousePosition() const {
     const sf::RenderWindow& window = m_context->GetWindow();
     return window.mapPixelToCoords(sf::Mouse::getPosition(window));
@@ -86,7 +83,7 @@ void MenuState::HandleEvent(const sf::Event& Event) {
             for (auto& CurrentButton: m_buttons) {
                 if (CurrentButton.Contains(Mouse)) {
                     CurrentButton.OnClick();
-                    return;   // le state a pu changer : on ne touche plus à rien
+                    return;
                 }
             }
         }
