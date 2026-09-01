@@ -13,7 +13,7 @@ public:
     Application(const std::string& name, unsigned int width = 1280u, 
                 unsigned int height = 720u, unsigned int fps = 60u):
     name(name), screen_width(width), screen_height(height), fps_cap(fps),
-    m_states(&m_context), m_context(&m_window, &m_assets) {}
+    m_states(&m_context), m_context(&m_window, &m_assets, &m_settings) {}
 
     int Run();
 
@@ -34,4 +34,5 @@ private:
     Core::AssetCache   m_assets;
     Core::Context      m_context;
     Core::StateManager m_states; 
+    Core::Settings     m_settings;
 };

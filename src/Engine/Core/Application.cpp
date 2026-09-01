@@ -38,7 +38,6 @@ bool Application::Init() {
     m_assets.AcquireGroup("Common");
 
     //- StateManager
-    m_states.Push<PauseState>();
     m_states.Push<GameState>();
     m_states.Push<MenuState>();
 
@@ -55,12 +54,6 @@ void Application::HandleEvents() {
 
         if (event->is<sf::Event::Closed>()) {
             m_window.close();
-        }
-
-        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
-                m_window.close();
-            }
         }
     }
 }
